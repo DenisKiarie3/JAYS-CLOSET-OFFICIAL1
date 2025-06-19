@@ -36,7 +36,9 @@ export default function Header() {
 
         {/* ✅ Right icons - Profile + Cart (Desktop only) */}
         <div className="hidden md:flex items-center space-x-4">
-          <User className="w-6 h-6 text-gray-600" />
+          <Link to="/login">
+            <User className="w-6 h-6 text-gray-600" />
+          </Link>
           <ShoppingCart className="w-6 h-6 text-gray-600" />
         </div>
 
@@ -67,8 +69,11 @@ export default function Header() {
         </ul>
         {/* ✅ Mobile-only Login Section below nav links */}
         <div className="md:hidden bg-pink-100 px-4 py-3 flex items-center space-x-2">
-          <User className="w-5 h-5 text-gray-700" />
-          <span className="text-sm font-medium text-gray-700">Log in</span>
+          <Link to="/login" className="flex items-center space-x-2 text-sm font-medium text-gray-700">
+            <User className="w-5 h-5" />
+            <span>Log in</span>
+          </Link>
+
         </div>
       </nav>
     </header>
