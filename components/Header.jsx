@@ -1,10 +1,16 @@
 // components/Header.jsx
 import React, { useState } from "react";
-import { Link } from "react-router-dom"; // ✅ For SPA navigation
-import { Menu, X, Search, User, ShoppingCart } from "lucide-react"; // ✅ Icons
+import { NavLink, Link } from "react-router-dom"; // ✅ CHANGED: Use NavLink for nav highlighting
+import { Menu, X, Search, User, ShoppingCart } from "lucide-react";
 
 export default function Header() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false); // ✅ Toggle mobile nav
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  // ✅ REUSABLE CLASS FUNCTION
+  const navLinkStyle = ({ isActive }) =>
+    isActive
+      ? "text-pink-600 underline underline-offset-4"
+      : "text-gray-700 hover:text-pink-600 transition";
 
   return (
     <header className="bg-white shadow-md">
@@ -49,31 +55,39 @@ export default function Header() {
         </div>
       </div>
 
-      {/* ✅ Nav Links (Always visible on desktop, collapsible on mobile) */}
+      {/* ✅ Nav Links */}
       <nav className={`bg-pink-50 py-2 ${isMenuOpen ? "block" : "hidden"} md:block`}>
-        <ul className="flex flex-col md:flex-row md:flex-wrap md:justify-center md:space-x-4 text-sm font-medium text-gray-700 px-4">
-          <li><Link to="/trousers">Trousers</Link></li>
-          <li><Link to="/dresses">Dresses</Link></li>
-          <li><Link to="/shoes">Shoes</Link></li>
-          <li><Link to="/bags">Bags</Link></li>
-          <li><Link to="/sweaters">Sweaters</Link></li>
-          <li><Link to="/scarfs">Scarfs</Link></li>
-          <li><Link to="/panties">Panties</Link></li>
-          <li><Link to="/trench-coats">Trench Coats</Link></li>
-          <li><Link to="/skirt-suits">Skirt Suits</Link></li>
-          <li><Link to="/dress-suits">Dress Suits</Link></li>
-          <li><Link to="/towels">Towels</Link></li>
-          <li><Link to="/stockings">Stockings</Link></li>
-          <li><Link to="/trouser-suits">Trouser Suits</Link></li>
-          <li><Link to="/puffy-jackets">Puffy Jackets</Link></li>
+        <ul className="flex flex-col md:flex-row md:flex-wrap md:justify-center md:space-x-4 text-sm font-medium px-4">
+          {/* ✅ CHANGED: All nav items now use NavLink with active styling */}
+          <li><NavLink to="/trousers" className={navLinkStyle}>Trousers</NavLink></li>
+          <li><NavLink to="/dresses" className={navLinkStyle}>Dresses</NavLink></li>
+          <li><NavLink to="/shoes" className={navLinkStyle}>Shoes</NavLink></li>
+          <li><NavLink to="/bags" className={navLinkStyle}>Bags</NavLink></li>
+          <li><NavLink to="/sweaters" className={navLinkStyle}>Sweaters</NavLink></li>
+          <li><NavLink to="/scarfs" className={navLinkStyle}>Scarfs</NavLink></li>
+          <li><NavLink to="/panties" className={navLinkStyle}>Panties</NavLink></li>
+          <li><NavLink to="/trench-coats" className={navLinkStyle}>Trench Coats</NavLink></li>
+          <li><NavLink to="/skirt-suits" className={navLinkStyle}>Skirt Suits</NavLink></li>
+          <li><NavLink to="/dress-suits" className={navLinkStyle}>Dress Suits</NavLink></li>
+          <li><NavLink to="/towels" className={navLinkStyle}>Towels</NavLink></li>
+          <li><NavLink to="/stockings" className={navLinkStyle}>Stockings</NavLink></li>
+          <li><NavLink to="/trouser-suits" className={navLinkStyle}>Trouser Suits</NavLink></li>
+          <li><NavLink to="/puffy-jackets" className={navLinkStyle}>Puffy Jackets</NavLink></li>
         </ul>
-        {/* ✅ Mobile-only Login Section below nav links */}
+
+        {/* ✅ Mobile-only Login Link - CHANGED to NavLink */}
         <div className="md:hidden bg-pink-100 px-4 py-3 flex items-center space-x-2">
-          <Link to="/login" className="flex items-center space-x-2 text-sm font-medium text-gray-700">
+          <NavLink
+            to="/login"
+            className={({ isActive }) =>
+              `flex items-center space-x-2 text-sm font-medium ${
+                isActive ? "text-pink-600 underline underline-offset-2" : "text-gray-700"
+              }`
+            }
+          >
             <User className="w-5 h-5" />
             <span>Log in</span>
-          </Link>
-
+          </NavLink>
         </div>
       </nav>
     </header>
