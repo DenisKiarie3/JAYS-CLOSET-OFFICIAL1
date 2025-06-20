@@ -14,11 +14,31 @@ export default function Signup() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   }
 
-  // Placeholder submit handler
-  function handleSubmit(e) {
+  // ✅ Actual submit handler connected to backend
+  async function handleSubmit(e) {
     e.preventDefault();
-    console.log("Submitted signup data:", formData);
-    // 🔐 You’ll send this to your backend using fetch/axios later
+
+    try {
+      const res = await fetch("https://jays-closet-official1-backend.onrender.com/api/auth/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(formData)
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        alert("✅ Account created successfully!");
+        // Optional: window.location.href = "/login"
+      } else {
+        alert(`❌ ${data.error || "Signup failed."}`);
+      }
+    } catch (err) {
+      console.error("Signup error:", err);
+      alert("🚨 Server error, please try again.");
+    }
   }
 
   return (

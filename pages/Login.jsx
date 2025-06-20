@@ -1,4 +1,4 @@
-// pages/Login.jsx
+// pages/Login.jsx 
 import React, { useState } from "react";
 import { User, Lock } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -6,6 +6,33 @@ import { Link } from "react-router-dom";
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  // ✅ Handle login function
+  async function handleLogin(e) {
+    e.preventDefault();
+
+    try {
+      const res = await fetch("https://jays-closet-official1-backend.onrender.com/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ email, password })
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        alert("✅ Logged in successfully!");
+        // Optional: store token or redirect
+      } else {
+        alert(`❌ ${data.error || "Login failed."}`);
+      }
+    } catch (err) {
+      console.error("Login error:", err);
+      alert("🚨 Server error, please try again.");
+    }
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -45,14 +72,19 @@ export default function Login() {
         </div>
 
         {/* Submit Button */}
-        <button className="w-full bg-pink-600 hover:bg-pink-700 text-white font-semibold py-2 rounded-md transition">
+        <button
+          onClick={handleLogin}
+          className="w-full bg-pink-600 hover:bg-pink-700 text-white font-semibold py-2 rounded-md transition"
+        >
           Log In
         </button>
 
         {/* Signup redirect */}
         <p className="text-sm text-center text-gray-600 mt-4">
-        Don't have an account?{" "}
-        <Link to="/signup" className="text-pink-600 hover:underline font-medium">Sign Up</Link>
+          Don't have an account?{" "}
+          <Link to="/signup" className="text-pink-600 hover:underline font-medium">
+            Sign Up
+          </Link>
         </p>
       </div>
     </div>
