@@ -59,20 +59,20 @@ export default function Header() {
       <nav className={`bg-pink-50 py-2 ${isMenuOpen ? "block" : "hidden"} md:block`}>
         <ul className="flex flex-col md:flex-row md:flex-wrap md:justify-center md:space-x-4 text-sm font-medium px-4">
           {/* ✅ CHANGED: All nav items now use NavLink with active styling */}
-          <li><NavLink to="/trousers" className={navLinkStyle}>Trousers</NavLink></li>
-          <li><NavLink to="/dresses" className={navLinkStyle}>Dresses</NavLink></li>
-          <li><NavLink to="/shoes" className={navLinkStyle}>Shoes</NavLink></li>
-          <li><NavLink to="/bags" className={navLinkStyle}>Bags</NavLink></li>
-          <li><NavLink to="/sweaters" className={navLinkStyle}>Sweaters</NavLink></li>
-          <li><NavLink to="/scarfs" className={navLinkStyle}>Scarfs</NavLink></li>
-          <li><NavLink to="/panties" className={navLinkStyle}>Panties</NavLink></li>
-          <li><NavLink to="/trench-coats" className={navLinkStyle}>Trench Coats</NavLink></li>
-          <li><NavLink to="/skirt-suits" className={navLinkStyle}>Skirt Suits</NavLink></li>
-          <li><NavLink to="/dress-suits" className={navLinkStyle}>Dress Suits</NavLink></li>
-          <li><NavLink to="/towels" className={navLinkStyle}>Towels</NavLink></li>
-          <li><NavLink to="/stockings" className={navLinkStyle}>Stockings</NavLink></li>
-          <li><NavLink to="/trouser-suits" className={navLinkStyle}>Trouser Suits</NavLink></li>
-          <li><NavLink to="/puffy-jackets" className={navLinkStyle}>Puffy Jackets</NavLink></li>
+          <li><NavLink to="/trousers" className={navLinkStyle} onClick={() => setIsMenuOpen(false)}>Trousers</NavLink></li>
+          <li><NavLink to="/dresses" className={navLinkStyle} onClick={() => setIsMenuOpen(false)}>Dresses</NavLink></li>
+          <li><NavLink to="/shoes" className={navLinkStyle} onClick={() => setIsMenuOpen(false)}>Shoes</NavLink></li>
+          <li><NavLink to="/bags" className={navLinkStyle} onClick={() => setIsMenuOpen(false)}>Bags</NavLink></li>
+          <li><NavLink to="/sweaters" className={navLinkStyle} onClick={() => setIsMenuOpen(false)}>Sweaters</NavLink></li>
+          <li><NavLink to="/scarfs" className={navLinkStyle} onClick={() => setIsMenuOpen(false)}>Scarfs</NavLink></li>
+          <li><NavLink to="/panties" className={navLinkStyle} onClick={() => setIsMenuOpen(false)}>Panties</NavLink></li>
+          <li><NavLink to="/trench-coats" className={navLinkStyle} onClick={() => setIsMenuOpen(false)}>Trench Coats</NavLink></li>
+          <li><NavLink to="/skirt-suits" className={navLinkStyle} onClick={() => setIsMenuOpen(false)}>Skirt Suits</NavLink></li>
+          <li><NavLink to="/dress-suits" className={navLinkStyle} onClick={() => setIsMenuOpen(false)}>Dress Suits</NavLink></li>
+          <li><NavLink to="/towels" className={navLinkStyle} onClick={() => setIsMenuOpen(false)}>Towels</NavLink></li>
+          <li><NavLink to="/stockings" className={navLinkStyle} onClick={() => setIsMenuOpen(false)}>Stockings</NavLink></li>
+          <li><NavLink to="/trouser-suits" className={navLinkStyle} onClick={() => setIsMenuOpen(false)}>Trouser Suits</NavLink></li>
+          <li><NavLink to="/puffy-jackets" className={navLinkStyle} onClick={() => setIsMenuOpen(false)}>Puffy Jackets</NavLink></li>
         </ul>
 
         {/* ✅ Mobile-only Login Link - CHANGED to NavLink */}
@@ -84,6 +84,7 @@ export default function Header() {
                 isActive ? "text-pink-600 underline underline-offset-2" : "text-gray-700"
               }`
             }
+            onClick={() => setIsMenuOpen(false)}
           >
             <User className="w-5 h-5" />
             <span>Log in</span>
