@@ -1,43 +1,57 @@
-// pages/Login.jsx 
+// pages/Login.jsx
 import React, { useState } from "react";
 import { User, Lock } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast"; // ✅ import the toast function
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-  // ✅ Handle login function
+  // ✅ Handle login logic
   async function handleLogin(e) {
     e.preventDefault();
+    if (loading) return;
+    setLoading(true);
 
     try {
-      const res = await fetch("https://jays-closet-official1-backend.onrender.com/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ email, password })
-      });
+      const res = await fetch(
+        "https://jays-closet-official1-backend.onrender.com/api/auth/login",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        }
+      );
 
       const data = await res.json();
 
       if (res.ok) {
-        alert("✅ Logged in successfully!");
-        // Optional: store token or redirect
+        localStorage.setItem("jays_token", data.token); // ✅ Store token (or user info)
+        toast.success("Logged in successfully!");        // ✅ Show success toast
+        navigate("/");                                   // ✅ Redirect to homepage or dashboard
       } else {
-        alert(`❌ ${data.error || "Login failed."}`);
+        toast.error(data.error || "Invalid email or password."); // ✅ Show error from server
       }
     } catch (err) {
       console.error("Login error:", err);
-      alert("🚨 Server error, please try again.");
+      toast.error("Server error. Please try again.");    // ✅ Show catch error
+    } finally {
+      setLoading(false);
     }
   }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-sm">
-        <h2 className="text-2xl font-bold text-center text-pink-600 mb-6">Login to JAYS-CLOSET</h2>
+      <form
+        onSubmit={handleLogin}
+        className="bg-white p-8 rounded-lg shadow-md w-full max-w-sm"
+      >
+        <h2 className="text-2xl font-bold text-center text-pink-600 mb-6">
+          Login to JAYS-CLOSET
+        </h2>
 
         {/* Email Input */}
         <div className="mb-4">
@@ -73,20 +87,22 @@ export default function Login() {
 
         {/* Submit Button */}
         <button
-          onClick={handleLogin}
-          className="w-full bg-pink-600 hover:bg-pink-700 text-white font-semibold py-2 rounded-md transition"
+          type="submit"
+          disabled={loading}
+          className={`w-full text-white font-semibold py-2 rounded-md transition
+            ${loading ? "bg-pink-300 cursor-not-allowed" : "bg-pink-600 hover:bg-pink-700"}`}
         >
-          Log In
+          {loading ? "Logging in..." : "Log In"}
         </button>
 
-        {/* Signup redirect */}
+        {/* Redirect to signup */}
         <p className="text-sm text-center text-gray-600 mt-4">
           Don't have an account?{" "}
           <Link to="/signup" className="text-pink-600 hover:underline font-medium">
             Sign Up
           </Link>
         </p>
-      </div>
+      </form>
     </div>
   );
 }

@@ -3,13 +3,17 @@ import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
 import "./index.css";
 
-// ✅ Add this import
+// ✅ Import BrowserRouter for routing
 import { BrowserRouter } from "react-router-dom";
+
+// ✅ Import Toaster from react-hot-toast
+import { Toaster } from "react-hot-toast";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    {/* ✅ Wrap the entire app in BrowserRouter */}
     <BrowserRouter>
+      {/* ✅ Global toast container */}
+      <Toaster position="top-right" />
       <App />
     </BrowserRouter>
   </React.StrictMode>

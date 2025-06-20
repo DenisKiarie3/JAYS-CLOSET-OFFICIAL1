@@ -1,6 +1,7 @@
 // pages/Signup.jsx
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast"; // ✅ toast import
 
 export default function Signup() {
   const [formData, setFormData] = useState({
@@ -9,35 +10,45 @@ export default function Signup() {
     password: ""
   });
 
-  // Handle input changes
+  const [loading, setLoading] = useState(false);        // ⬅️ disable button during submission
+  const navigate = useNavigate();                       // ⬅️ redirect after success
+
+  // ✅ Handle input changes
   function handleChange(e) {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   }
 
-  // ✅ Actual submit handler connected to backend
+  // ✅ Submit form to backend
   async function handleSubmit(e) {
     e.preventDefault();
+    if (loading) return;
+    setLoading(true);
 
     try {
-      const res = await fetch("https://jays-closet-official1-backend.onrender.com/api/auth/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(formData)
-      });
+      const res = await fetch(
+        "https://jays-closet-official1-backend.onrender.com/api/auth/signup",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(formData)
+        }
+      );
 
       const data = await res.json();
 
       if (res.ok) {
-        alert("✅ Account created successfully!");
-        // Optional: window.location.href = "/login"
+        toast.success("✅ Account created successfully!");
+        navigate("/login"); // ⬅️ redirect to login page
       } else {
-        alert(`❌ ${data.error || "Signup failed."}`);
+        toast.error(data.error || "Signup failed.");
       }
     } catch (err) {
       console.error("Signup error:", err);
-      alert("🚨 Server error, please try again.");
+      toast.error("🚨 Server error, please try again.");
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -100,9 +111,11 @@ export default function Signup() {
           {/* Submit button */}
           <button
             type="submit"
-            className="w-full bg-pink-600 hover:bg-pink-700 text-white font-semibold py-2 rounded-md transition"
+            disabled={loading}
+            className={`w-full text-white font-semibold py-2 rounded-md transition
+              ${loading ? "bg-pink-300 cursor-not-allowed" : "bg-pink-600 hover:bg-pink-700"}`}
           >
-            Sign Up
+            {loading ? "Creating Account..." : "Sign Up"}
           </button>
         </form>
 
