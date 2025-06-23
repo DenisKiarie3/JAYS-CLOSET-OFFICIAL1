@@ -1,7 +1,7 @@
 // pages/Login.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { User, Lock } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import toast from "react-hot-toast"; // ✅ import the toast function
 
 export default function Login() {
@@ -9,6 +9,15 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  const location = useLocation(); // ✅ Needed to read URL params
+
+useEffect(() => {
+  const params = new URLSearchParams(location.search); // ✅ Parse ?reset=success
+  if (params.get("reset") === "success") {
+    toast.success("Password reset successful! Please log in."); // ✅ Show feedback
+  }
+}, [location]);
 
   // ✅ Handle login logic
   async function handleLogin(e) {

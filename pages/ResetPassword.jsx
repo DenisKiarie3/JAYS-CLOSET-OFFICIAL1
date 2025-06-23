@@ -27,7 +27,7 @@ export default function ResetPassword() {
 
       if (res.ok) {
         setMessage("✅ Password reset successful! Redirecting to login...");
-        setTimeout(() => navigate("/login"), 2000);
+        setTimeout(() => navigate("/login?reset=success"), 2000); // ✅ include query param
       } else {
         setMessage(`❌ ${data.error || "Reset failed"}`);
       }
