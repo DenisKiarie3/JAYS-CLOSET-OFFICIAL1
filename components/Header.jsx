@@ -1,14 +1,22 @@
-// components/Header.jsx
-import React, { useState } from "react";
-import { NavLink, Link, useNavigate } from "react-router-dom"; // ✅ CHANGED
+import React, { useState, useEffect } from "react"; // ✅ UPDATED
+import { NavLink, Link, useNavigate } from "react-router-dom";
 import { Menu, X, Search, User, ShoppingCart } from "lucide-react";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const navigate = useNavigate(); // ✅ NEW
-  const token = localStorage.getItem("jays_token"); // ✅ NEW
+  const navigate = useNavigate();
+  const token = localStorage.getItem("jays_token");
 
-  // ✅ REUSABLE CLASS FUNCTION
+  const [user, setUser] = useState(null); // ✅ NEW
+
+  // ✅ Load user info from localStorage
+  useEffect(() => {
+    const storedUser = localStorage.getItem("jays_user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
+
   const navLinkStyle = ({ isActive }) =>
     isActive
       ? "text-pink-600 underline underline-offset-4"
@@ -18,22 +26,19 @@ export default function Header() {
     <header className="bg-white shadow-md">
       {/* ✅ Top Row */}
       <div className="flex items-center justify-between px-4 py-3 md:px-8">
-        {/* ✅ Mobile menu toggle icon */}
+        {/* Mobile menu toggle */}
         <div className="md:hidden">
-          <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="text-gray-600"
-          >
+          <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="text-gray-600">
             {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
         </div>
 
-        {/* ✅ Search Icon (Desktop only) */}
+        {/* Desktop search icon */}
         <div className="hidden md:block">
           <Search className="w-6 h-6 text-gray-600" />
         </div>
 
-        {/* ✅ Logo - always centered */}
+        {/* Logo */}
         <div className="flex-1 flex justify-center">
           <img
             src="https://jays-closet-official1-backend.onrender.com/images/logo7.png"
@@ -42,12 +47,19 @@ export default function Header() {
           />
         </div>
 
-        {/* ✅ Right icons - Profile + Cart (Desktop only) */}
+        {/* Desktop right-side */}
         <div className="hidden md:flex items-center space-x-4">
+          {/* ✅ Show user greeting if logged in */}
+          {token && user && (
+            <span className="text-sm text-gray-600 font-medium">
+              Hello, {user.name.split(" ")[0]}
+            </span>
+          )}
           {token ? (
             <button
               onClick={() => {
                 localStorage.removeItem("jays_token");
+                localStorage.removeItem("jays_user"); // ✅ clear user too
                 navigate("/login");
               }}
               className="flex items-center space-x-1 text-sm text-red-600 hover:text-red-700 transition"
@@ -64,38 +76,40 @@ export default function Header() {
           <ShoppingCart className="w-6 h-6 text-gray-600" />
         </div>
 
-        {/* ✅ Mobile right-side icons */}
+        {/* Mobile right-side icons */}
         <div className="md:hidden flex items-center space-x-4">
           <Search className="w-6 h-6 text-gray-600" />
           <ShoppingCart className="w-6 h-6 text-gray-600" />
         </div>
       </div>
 
-      {/* ✅ Nav Links */}
+      {/* Nav links */}
       <nav className={`bg-pink-50 py-2 ${isMenuOpen ? "block" : "hidden"} md:block`}>
         <ul className="flex flex-col md:flex-row md:flex-wrap md:justify-center md:space-x-4 text-sm font-medium px-4">
-          <li><NavLink to="/trousers" className={navLinkStyle} onClick={() => setIsMenuOpen(false)}>Trousers</NavLink></li>
-          <li><NavLink to="/dresses" className={navLinkStyle} onClick={() => setIsMenuOpen(false)}>Dresses</NavLink></li>
-          <li><NavLink to="/shoes" className={navLinkStyle} onClick={() => setIsMenuOpen(false)}>Shoes</NavLink></li>
-          <li><NavLink to="/bags" className={navLinkStyle} onClick={() => setIsMenuOpen(false)}>Bags</NavLink></li>
-          <li><NavLink to="/sweaters" className={navLinkStyle} onClick={() => setIsMenuOpen(false)}>Sweaters</NavLink></li>
-          <li><NavLink to="/scarfs" className={navLinkStyle} onClick={() => setIsMenuOpen(false)}>Scarfs</NavLink></li>
-          <li><NavLink to="/panties" className={navLinkStyle} onClick={() => setIsMenuOpen(false)}>Panties</NavLink></li>
-          <li><NavLink to="/trench-coats" className={navLinkStyle} onClick={() => setIsMenuOpen(false)}>Trench Coats</NavLink></li>
-          <li><NavLink to="/skirt-suits" className={navLinkStyle} onClick={() => setIsMenuOpen(false)}>Skirt Suits</NavLink></li>
-          <li><NavLink to="/dress-suits" className={navLinkStyle} onClick={() => setIsMenuOpen(false)}>Dress Suits</NavLink></li>
-          <li><NavLink to="/towels" className={navLinkStyle} onClick={() => setIsMenuOpen(false)}>Towels</NavLink></li>
-          <li><NavLink to="/stockings" className={navLinkStyle} onClick={() => setIsMenuOpen(false)}>Stockings</NavLink></li>
-          <li><NavLink to="/trouser-suits" className={navLinkStyle} onClick={() => setIsMenuOpen(false)}>Trouser Suits</NavLink></li>
-          <li><NavLink to="/puffy-jackets" className={navLinkStyle} onClick={() => setIsMenuOpen(false)}>Puffy Jackets</NavLink></li>
+          {[
+            "trousers", "dresses", "shoes", "bags", "sweaters", "scarfs", "panties",
+            "trench-coats", "skirt-suits", "dress-suits", "towels", "stockings",
+            "trouser-suits", "puffy-jackets"
+          ].map((item) => (
+            <li key={item}>
+              <NavLink
+                to={`/${item}`}
+                className={navLinkStyle}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                {item.split("-").map((word) => word[0].toUpperCase() + word.slice(1)).join(" ")}
+              </NavLink>
+            </li>
+          ))}
         </ul>
 
-        {/* ✅ Mobile-only Login/Logout Link */}
+        {/* ✅ Mobile-only login/logout */}
         <div className="md:hidden bg-pink-100 px-4 py-3 flex items-center space-x-2">
           {token ? (
             <button
               onClick={() => {
                 localStorage.removeItem("jays_token");
+                localStorage.removeItem("jays_user"); // ✅ clear user too
                 setIsMenuOpen(false);
                 navigate("/login");
               }}
@@ -104,7 +118,7 @@ export default function Header() {
             >
               <User className="w-5 h-5" />
               <span>Logout</span>
-           </button>
+            </button>
           ) : (
             <NavLink
               to="/login"
