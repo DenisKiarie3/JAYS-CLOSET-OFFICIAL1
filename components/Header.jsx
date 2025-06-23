@@ -1,10 +1,12 @@
 // components/Header.jsx
 import React, { useState } from "react";
-import { NavLink, Link } from "react-router-dom"; // ✅ CHANGED: Use NavLink for nav highlighting
+import { NavLink, Link, useNavigate } from "react-router-dom"; // ✅ CHANGED
 import { Menu, X, Search, User, ShoppingCart } from "lucide-react";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigate = useNavigate(); // ✅ NEW
+  const token = localStorage.getItem("jays_token"); // ✅ NEW
 
   // ✅ REUSABLE CLASS FUNCTION
   const navLinkStyle = ({ isActive }) =>
@@ -42,9 +44,23 @@ export default function Header() {
 
         {/* ✅ Right icons - Profile + Cart (Desktop only) */}
         <div className="hidden md:flex items-center space-x-4">
-          <Link to="/login">
-            <User className="w-6 h-6 text-gray-600" />
-          </Link>
+          {token ? (
+            <button
+              onClick={() => {
+                localStorage.removeItem("jays_token");
+                navigate("/login");
+              }}
+              className="flex items-center space-x-1 text-sm text-red-600 hover:text-red-700 transition"
+              title="Logout"
+            >
+              <User className="w-5 h-5" />
+              <span className="hidden md:inline">Logout</span>
+            </button>
+          ) : (
+            <Link to="/login">
+              <User className="w-6 h-6 text-gray-600" />
+            </Link>
+          )}
           <ShoppingCart className="w-6 h-6 text-gray-600" />
         </div>
 
@@ -58,7 +74,6 @@ export default function Header() {
       {/* ✅ Nav Links */}
       <nav className={`bg-pink-50 py-2 ${isMenuOpen ? "block" : "hidden"} md:block`}>
         <ul className="flex flex-col md:flex-row md:flex-wrap md:justify-center md:space-x-4 text-sm font-medium px-4">
-          {/* ✅ CHANGED: All nav items now use NavLink with active styling */}
           <li><NavLink to="/trousers" className={navLinkStyle} onClick={() => setIsMenuOpen(false)}>Trousers</NavLink></li>
           <li><NavLink to="/dresses" className={navLinkStyle} onClick={() => setIsMenuOpen(false)}>Dresses</NavLink></li>
           <li><NavLink to="/shoes" className={navLinkStyle} onClick={() => setIsMenuOpen(false)}>Shoes</NavLink></li>
@@ -75,20 +90,35 @@ export default function Header() {
           <li><NavLink to="/puffy-jackets" className={navLinkStyle} onClick={() => setIsMenuOpen(false)}>Puffy Jackets</NavLink></li>
         </ul>
 
-        {/* ✅ Mobile-only Login Link - CHANGED to NavLink */}
+        {/* ✅ Mobile-only Login/Logout Link */}
         <div className="md:hidden bg-pink-100 px-4 py-3 flex items-center space-x-2">
-          <NavLink
-            to="/login"
-            className={({ isActive }) =>
-              `flex items-center space-x-2 text-sm font-medium ${
-                isActive ? "text-pink-600 underline underline-offset-2" : "text-gray-700"
-              }`
-            }
-            onClick={() => setIsMenuOpen(false)}
-          >
-            <User className="w-5 h-5" />
-            <span>Log in</span>
-          </NavLink>
+          {token ? (
+            <button
+              onClick={() => {
+                localStorage.removeItem("jays_token");
+                setIsMenuOpen(false);
+                navigate("/login");
+              }}
+              className="flex items-center space-x-2 text-sm font-medium text-red-600 hover:text-red-700 transition"
+              title="Logout"
+            >
+              <User className="w-5 h-5" />
+              <span>Logout</span>
+           </button>
+          ) : (
+            <NavLink
+              to="/login"
+              className={({ isActive }) =>
+                `flex items-center space-x-2 text-sm font-medium ${
+                  isActive ? "text-pink-600 underline underline-offset-2" : "text-gray-700"
+                }`
+              }
+              onClick={() => setIsMenuOpen(false)}
+            >
+              <User className="w-5 h-5" />
+              <span>Log in</span>
+            </NavLink>
+          )}
         </div>
       </nav>
     </header>

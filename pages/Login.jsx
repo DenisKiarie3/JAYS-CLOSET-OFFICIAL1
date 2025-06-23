@@ -29,7 +29,8 @@ export default function Login() {
       const data = await res.json();
 
       if (res.ok) {
-        localStorage.setItem("jays_token", data.token); // ✅ Store token (or user info)
+        localStorage.setItem("jays_token", data.token);
+        localStorage.setItem("jays_user", JSON.stringify(data.user)); // ✅ Store user info // ✅ Store token (or user info)
         toast.success("Logged in successfully!");        // ✅ Show success toast
         navigate("/");                                   // ✅ Redirect to homepage or dashboard
       } else {
